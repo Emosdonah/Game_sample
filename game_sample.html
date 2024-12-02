@@ -1,156 +1,140 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.2">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizable Game Sample</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background: #87CEEB; /* Default background color */
+        }
+        #controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Customizable Game Sample&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>canvas {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #87CEEB; /* Default background color */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#controls {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>z-index: 10;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(255, 255, 255, 0.8);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="controls"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Upload Background:</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="file" id="bgUpload" accept="image/*"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Upload Character:</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="file" id="charUpload" accept="image/*"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;canvas id="gameCanvas"&gt;&lt;/canvas&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const canvas = document.getElementById('gameCanvas');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const ctx = canvas.getContext('2d');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>canvas.width = window.innerWidth;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>canvas.height = window.innerHeight;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Default assets</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let bgImage = new Image();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>bgImage.src = 'https://via.placeholder.com/800x600?text=Background';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>let charImage = new Image();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>charImage.src = 'https://via.placeholder.com/50x50?text=Character';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Character properties</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const character = {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>x: 100,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>y: canvas.height - 150,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 50,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 50,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>dx: 0,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>dy: 0,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>isJumping: false</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const gravity = 0.5;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const jumpPower = -10;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Event listeners for controls</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('keydown', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (e.key === 'ArrowRight') character.dx = 5;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (e.key === 'ArrowLeft') character.dx = -5;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (e.key === 'ArrowUp' &amp;&amp; !character.isJumping) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>character.dy = jumpPower;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>character.isJumping = true;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('keyup', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') character.dx = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Handle image uploads</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('bgUpload').addEventListener('change', (event) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const file = event.target.files[0];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (file) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const reader = new FileReader();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>reader.onload = (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>bgImage.src = e.target.result;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                </span>reader.readAsDataURL(file);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('charUpload').addEventListener('change', (event) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const file = event.target.files[0];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (file) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const reader = new FileReader();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>reader.onload = (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>charImage.src = e.target.result;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                </span>reader.readAsDataURL(file);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Game loop</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function update() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Update character position</p>
-<p class="p1"><span class="Apple-converted-space">            </span>character.x += character.dx;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>character.y += character.dy;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Apply gravity</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (character.y + character.height &lt; canvas.height) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>character.dy += gravity;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>character.dy = 0;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>character.isJumping = false;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>character.y = canvas.height - character.height;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function draw() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Draw background</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Draw character</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.drawImage(charImage, character.x, character.y, character.width, character.height);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function gameLoop() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.clearRect(0, 0, canvas.width, canvas.height);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>update();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>draw();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>requestAnimationFrame(gameLoop);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>gameLoop();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <div id="controls">
+        <label>
+            Upload Background:
+            <input type="file" id="bgUpload" accept="image/*">
+        </label>
+        <br>
+        <label>
+            Upload Character:
+            <input type="file" id="charUpload" accept="image/*">
+        </label>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Default assets
+        let bgImage = new Image();
+        bgImage.src = 'https://via.placeholder.com/800x600?text=Background';
+
+        let charImage = new Image();
+        charImage.src = 'https://via.placeholder.com/50x50?text=Character';
+
+        // Character properties
+        const character = {
+            x: 100,
+            y: canvas.height - 150,
+            width: 50,
+            height: 50,
+            dx: 0,
+            dy: 0,
+            isJumping: false
+        };
+
+        const gravity = 0.5;
+        const jumpPower = -10;
+
+        // Event listeners for controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') character.dx = 5;
+            if (e.key === 'ArrowLeft') character.dx = -5;
+            if (e.key === 'ArrowUp' && !character.isJumping) {
+                character.dy = jumpPower;
+                character.isJumping = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') character.dx = 0;
+        });
+
+        // Handle image uploads
+        document.getElementById('bgUpload').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    bgImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('charUpload').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    charImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Game loop
+        function update() {
+            // Update character position
+            character.x += character.dx;
+            character.y += character.dy;
+
+            // Apply gravity
+            if (character.y + character.height < canvas.height) {
+                character.dy += gravity;
+            } else {
+                character.dy = 0;
+                character.isJumping = false;
+                character.y = canvas.height - character.height;
+            }
+        }
+
+        function draw() {
+            // Draw background
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw character
+            ctx.drawImage(charImage, character.x, character.y, character.width, character.height);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
 </body>
 </html>
